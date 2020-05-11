@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 	"os"
@@ -41,6 +42,10 @@ func initDB() {
 
 func main() {
 	initDB()
+
+	http.HandleFunc(`/v1/`, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+	})
 
 	serverPort := os.Getenv("HTTP_PORT")
 	if serverPort == "" {
