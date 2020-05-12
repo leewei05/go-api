@@ -3,11 +3,12 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"html"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -43,9 +44,11 @@ func initDB() {
 func main() {
 	initDB()
 
-	http.HandleFunc(`/v1/`, func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-	})
+	r := mux.NewRouter().StrictSlash(true)
+
+	r.HandleFunc("/v1/", get).Methods("GET")
+
+	http.Handle("/", r)
 
 	serverPort := os.Getenv("HTTP_PORT")
 	if serverPort == "" {
@@ -53,6 +56,17 @@ func main() {
 	}
 
 	port := fmt.Sprintf(":%v", serverPort)
+
+	s := &http.Server{
+		Addr:         port,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	log.Printf("HTTP server running on port %v", port)
-	http.ListenAndServe(port, nil)
+	log.Fatal(s.ListenAndServe())
+}
+
+func get(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello"))
 }
