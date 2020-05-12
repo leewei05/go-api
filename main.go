@@ -17,6 +17,35 @@ var (
 	db *sql.DB
 )
 
+func main() {
+	initDB()
+
+	r := mux.NewRouter().StrictSlash(true)
+
+	r.HandleFunc("/v1/", getProduct).Methods("GET")
+	r.HandleFunc("/v1/{id}", createProduct).Methods("POST")
+	r.HandleFunc("/v1/{id}", updateProduct).Methods("PUT")
+	r.HandleFunc("/v1/{id}", deleteProduct).Methods("DELETE")
+
+	http.Handle("/", r)
+
+	serverPort := os.Getenv("HTTP_PORT")
+	if serverPort == "" {
+		log.Panic("Null HTTP port value")
+	}
+
+	port := fmt.Sprintf(":%v", serverPort)
+
+	s := &http.Server{
+		Addr:         port,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Printf("HTTP server running on port %v", port)
+	log.Fatal(s.ListenAndServe())
+}
+
 func initDB() {
 	_ = godotenv.Load("config.env")
 
@@ -41,32 +70,18 @@ func initDB() {
 	}
 }
 
-func main() {
-	initDB()
-
-	r := mux.NewRouter().StrictSlash(true)
-
-	r.HandleFunc("/v1/", get).Methods("GET")
-
-	http.Handle("/", r)
-
-	serverPort := os.Getenv("HTTP_PORT")
-	if serverPort == "" {
-		log.Panic("Null HTTP port value")
-	}
-
-	port := fmt.Sprintf(":%v", serverPort)
-
-	s := &http.Server{
-		Addr:         port,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-	log.Printf("HTTP server running on port %v", port)
-	log.Fatal(s.ListenAndServe())
+func getProduct(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello"))
 }
 
-func get(w http.ResponseWriter, r *http.Request) {
+func createProduct(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello"))
+}
+
+func updateProduct(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello"))
+}
+
+func deleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello"))
 }
