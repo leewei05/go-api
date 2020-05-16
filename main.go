@@ -10,41 +10,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/leewei05/go-api/rest"
 	_ "github.com/lib/pq"
 )
 
 var (
 	db *sql.DB
 )
-
-func main() {
-	initDB()
-
-	r := mux.NewRouter().StrictSlash(true)
-
-	r.HandleFunc("/v1/", getProduct).Methods("GET")
-	r.HandleFunc("/v1/{id}", createProduct).Methods("POST")
-	r.HandleFunc("/v1/{id}", updateProduct).Methods("PUT")
-	r.HandleFunc("/v1/{id}", deleteProduct).Methods("DELETE")
-
-	http.Handle("/", r)
-
-	serverPort := os.Getenv("HTTP_PORT")
-	if serverPort == "" {
-		log.Panic("Null HTTP port value")
-	}
-
-	port := fmt.Sprintf(":%v", serverPort)
-
-	s := &http.Server{
-		Addr:         port,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-	log.Printf("HTTP server running on port %v", port)
-	log.Fatal(s.ListenAndServe())
-}
 
 func initDB() {
 	_ = godotenv.Load("config.env")
@@ -70,18 +42,32 @@ func initDB() {
 	}
 }
 
-func getProduct(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
-}
+func main() {
+	initDB()
 
-func createProduct(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
-}
+	serverPort := os.Getenv("HTTP_PORT")
+	if serverPort == "" {
+		log.Panic("Null HTTP port value")
+	}
 
-func updateProduct(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
-}
+	r := mux.NewRouter().StrictSlash(true)
+	ri := rest.NewRest()
 
-func deleteProduct(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
+	r.HandleFunc("/v1/", ri.GetProduct).Methods("GET")
+	r.HandleFunc("/v1/{id}", ri.CreateProduct).Methods("POST")
+	r.HandleFunc("/v1/{id}", ri.UpdateProduct).Methods("PUT")
+	r.HandleFunc("/v1/{id}", ri.DeleteProduct).Methods("DELETE")
+
+	http.Handle("/", r)
+
+	port := fmt.Sprintf(":%v", serverPort)
+
+	s := &http.Server{
+		Addr:         port,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Printf("HTTP server running on port %v", port)
+	log.Fatal(s.ListenAndServe())
 }
