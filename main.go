@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"github.com/leewei05/go-api/rest"
 	_ "github.com/lib/pq"
@@ -36,7 +37,7 @@ func initDB() {
 		log.Panicf("Missing config parameters: %v", pgStr)
 	}
 
-	_, err := sql.Open("postgres", pgStr)
+	_, err := gorm.Open("postgres", pgStr)
 	if err != nil {
 		log.Panic("Cannot open PostgreSQL database")
 	}

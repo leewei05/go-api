@@ -6,7 +6,6 @@ Go-api is a backend framework project written in Go and deployed on GKE.
 
 ### API
 
-* mux
 * dao
 * ORM
 * middleware
