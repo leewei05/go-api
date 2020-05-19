@@ -15,10 +15,10 @@ Go-api is a backend framework project written in Go and deployed on GKE.
 
 ### Deployment
 
+* Cloud SQL(PostgreSQL)
 * Docker
 * GKE
 * Load Balancer
 * SSL
-* Cloud SQL(PostgreSQL)
 * CI/CD(Gitlab)
 
