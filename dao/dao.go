@@ -14,18 +14,20 @@ func NewDao(db *gorm.DB) Dao {
 }
 
 func (d *dao) Get() (*Product, error) {
-	var product Product
+	var p Product
 
-	if err := d.db.Find(&product).Error; err != nil {
+	if err := d.db.Find(&p).Error; err != nil {
 		return nil, err
 	}
 
-	return &product, nil
+	return &p, nil
 }
 
-func (d *dao) Create(p Product) (*Product, error) {
-
-	return &Product{}, nil
+func (d *dao) Create(p *Product) error {
+	if err := d.db.Create(&p).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d *dao) Update() {}

@@ -5,7 +5,7 @@ import "time"
 // Dao is an interface
 type Dao interface {
 	Get() (*Product, error)
-	Create(Product) (*Product, error)
+	Create(*Product) error
 	Update()
 	Delete()
 }
