@@ -1,0 +1,2 @@
+GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES ON TABLE product to db_user;
+GRANT SELECT ON TABLE product to db_readonly;
