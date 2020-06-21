@@ -28,10 +28,8 @@ func initDB() {
 	dbPwd := os.Getenv("PG_PWD")
 	dbName := os.Getenv("PG_DB")
 
-	pgStr := fmt.Sprintf("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable",
+	pgStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPwd, dbName)
-	fmt.Println(pgStr)
 
 	if dbHost == "" || dbPort == "" || dbUser == "" || dbPwd == "" || dbName == "" {
 		log.Panicf("Missing config parameters: %v", pgStr)
