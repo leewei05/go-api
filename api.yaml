@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-api-deployment
+  labels:
+    app: go-api 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go-api 
+  template:
+    metadata:
+      labels:
+        app: go-api 
+    spec:
+      containers:
+      - name: go-api 
+        image: gcr.io/gcp-expert-sandbox-lee/go-api:latest
+        ports:
+        - containerPort: 8080 
